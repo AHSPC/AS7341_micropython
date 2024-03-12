@@ -1,3 +1,13 @@
+# AS7341_mycropython
+
+Tested very briefly with an RPI Pico. Micropython doesn't have `monotonic()`, so
+`_wait_for_data()` is ported poorly (can be improved later).
+
+Depends on Adafruit's register and i2c_device libraries. See our micropython port of
+i2c_device [here](https://github.com/AHSPC/adafruit_i2c_device_micropython). Adafruit register seems to work unchanged.
+
+Super simple example in pure micropython:
+```python
 from time import sleep
 from machine import I2C, Pin
 from as7341 import AS7341
@@ -26,3 +36,4 @@ while True:
     # print("Near-IR (NIR)      %s" % bar_graph(sensor.channel_nir))
     print("\n------------------------------------------------")
     sleep(1)
+```
