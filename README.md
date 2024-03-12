@@ -6,7 +6,8 @@ Tested very briefly with an RPI Pico. Micropython doesn't have `monotonic()`, so
 Depends on Adafruit's register and i2c_device libraries. See our micropython port of
 i2c_device [here](https://github.com/AHSPC/adafruit_i2c_device_micropython). Adafruit register seems to work unchanged.
 
-Super simple example in pure micropython:
+See Adafruit's circuitpython repository for other usage examples (will need to be ported).
+Here's a super simple example in pure micropython:
 ```python
 from time import sleep
 from machine import I2C, Pin
