@@ -1,8 +1,9 @@
 from time import sleep
-from machine import I2C, Pin
+from machine import SoftI2C, Pin
 from as7341 import AS7341
 
-i2c = I2C(id=0, sda=Pin(0), scl=Pin(1))
+i2c = SoftI2C(sda=Pin(10), scl=Pin(11))
+print(i2c.scan())
 sensor = AS7341(i2c)
 
 
@@ -25,4 +26,4 @@ while True:
     # print("Clear              %s" % bar_graph(sensor.channel_clear))
     # print("Near-IR (NIR)      %s" % bar_graph(sensor.channel_nir))
     print("\n------------------------------------------------")
-    sleep(1)
+    sleep(.1)
