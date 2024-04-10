@@ -35,11 +35,11 @@ Implementation Notes
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_AS7341.git"
 
-#from time import sleep, monotonic
-from typing import NamedTuple
-from time import sleep, ticks_diff, ticks_ms, ticks_us
+# from time import sleep, monotonic
+from time import sleep, ticks_diff, ticks_ms
 from machine import I2C
 from micropython import const
+from collections import namedtuple
 import i2c_device
 
 from i2c_struct import UnaryStruct, Struct  # , ROUnaryStruct
@@ -264,17 +264,6 @@ SMUX_IN.add_values(
     )
 )
 
-class Readings(NamedTuple):
-    violet: int
-    indigo: int
-    blue: int
-    cyan: int
-    green: int
-    yellow: int
-    orange: int
-    red: int
-    clear: int
-    near_ir: int
 
 class AS7341:  # pylint:disable=too-many-instance-attributes, no-member
     """Library for the AS7341 Sensor
@@ -360,9 +349,7 @@ class AS7341:  # pylint:disable=too-many-instance-attributes, no-member
     * @return true: success false: failure
     """
 
-    def __init__(
-        self, i2c_bus: I2C, address: int = _AS7341_I2CADDR_DEFAULT
-    ) -> None:
+    def __init__(self, i2c_bus: I2C, address: int = _AS7341_I2CADDR_DEFAULT) -> None:
         self.i2c_device = i2c_device.I2CDevice(i2c_bus, address)
         if not self._device_id in [_AS7341_DEVICE_ID]:
             raise RuntimeError("Failed to find an AS7341 sensor - check your wiring!")
@@ -381,19 +368,31 @@ class AS7341:  # pylint:disable=too-many-instance-attributes, no-member
         self.astep = 999
         self.gain = Gain.GAIN_128X  # pylint:disable=no-member
 
+    Readings = namedtuple(
+        "Readings",
+        [
+            "violet",
+            "indigo",
+            "blue",
+            "cyan",
+            "green",
+            "yellow",
+            "orange",
+            "red",
+        ],
+    )
+
     def get_readings(self) -> Readings:
         all_channels = self.all_channels
-        return Readings(
-            violet = all_channels[0],
-            indigo = all_channels[1],
-            blue = all_channels[2],
-            cyan = all_channels[3],
-            green = all_channels[4],
-            yellow = all_channels[5],
-            orange = all_channels[6],
-            red = all_channels[7],
-            clear = all_channels[8],
-            near_ir = all_channels[9],
+        return self.Readings(
+            violet=all_channels[0],
+            indigo=all_channels[1],
+            blue=all_channels[2],
+            cyan=all_channels[3],
+            green=all_channels[4],
+            yellow=all_channels[5],
+            orange=all_channels[6],
+            red=all_channels[7],
         )
 
     @property
@@ -470,12 +469,14 @@ class AS7341:  # pylint:disable=too-many-instance-attributes, no-member
         _ = self._all_channels
         return self._channel_5_data
 
-    def _wait_for_data(self, timeout_seconds: float = 1.0) -> None:
+    def _wait_for_data(self, timeout_ms: float = 500) -> None:
         """Wait for sensor data to be ready"""
         start = ticks_ms()
         while not self._data_ready_bit:
-            if ticks_diff(ticks_ms(), start) > timeout_seconds * 1000:
-                raise RuntimeError(f"Timeout occurred waiting for sensor data (took >{timeout_seconds}s)")
+            if ticks_diff(ticks_ms(), start) > timeout_ms:
+                raise RuntimeError(
+                    f"Timeout occurred waiting for sensor data (took >{timeout_ms}ms)"
+                )
             sleep(0.001)
         # start = monotonic()
         # while not self._data_ready_bit:
