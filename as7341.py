@@ -264,6 +264,33 @@ SMUX_IN.add_values(
     )
 )
 
+# class Readings:
+#     violet = 0,
+#     indigo = 0,
+#     blue = 0,
+#     cyan = 0,
+#     green = 0,
+#     yellow = 0,
+#     orange = 0,
+#     red = 0,
+#     def __init__(self,
+#         violet: int,
+#         indigo: int,
+#         blue: int,
+#         cyan: int,
+#         green: int,
+#         yellow: int,
+#         orange: int,
+#         red: int,
+#     ) -> None:
+#         self.violet = violet
+#         self.indigo = indigo
+#         self.blue = blue
+#         self.cyan = cyan
+#         self.green = green
+#         self.yellow = yellow
+#         self.orange = orange
+#         self.red = red
 
 class AS7341:  # pylint:disable=too-many-instance-attributes, no-member
     """Library for the AS7341 Sensor
@@ -364,36 +391,22 @@ class AS7341:  # pylint:disable=too-many-instance-attributes, no-member
 
         self._power_enabled = True
         self._led_control_enabled = True
-        self.atime = 100
-        self.astep = 999
+        self.astep = 599 # 999
+        self.atime = 29 # 100
         self.gain = Gain.GAIN_128X  # pylint:disable=no-member
 
-    Readings = namedtuple(
-        "Readings",
-        [
-            "violet",
-            "indigo",
-            "blue",
-            "cyan",
-            "green",
-            "yellow",
-            "orange",
-            "red",
-        ],
-    )
-
-    def get_readings(self) -> Readings:
+    def get_readings(self):
         all_channels = self.all_channels
-        return self.Readings(
-            violet=all_channels[0],
-            indigo=all_channels[1],
-            blue=all_channels[2],
-            cyan=all_channels[3],
-            green=all_channels[4],
-            yellow=all_channels[5],
-            orange=all_channels[6],
-            red=all_channels[7],
-        )
+        return {
+            'violet': all_channels[0],
+            'indigo': all_channels[1],
+            'blue': all_channels[2],
+            'cyan': all_channels[3],
+            'green': all_channels[4],
+            'yellow': all_channels[5],
+            'orange': all_channels[6],
+            'red': all_channels[7],
+        }
 
     @property
     def all_channels(self) -> Tuple[int, ...]:
