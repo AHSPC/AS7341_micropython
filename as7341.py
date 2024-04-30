@@ -395,18 +395,24 @@ class AS7341:  # pylint:disable=too-many-instance-attributes, no-member
         self.atime = 29 # 100
         self.gain = Gain.GAIN_128X  # pylint:disable=no-member
 
-    def get_readings(self):
-        all_channels = self.all_channels
-        return {
-            'violet': all_channels[0],
-            'indigo': all_channels[1],
-            'blue': all_channels[2],
-            'cyan': all_channels[3],
-            'green': all_channels[4],
-            'yellow': all_channels[5],
-            'orange': all_channels[6],
-            'red': all_channels[7],
-        }
+    def get_readings(self, log_errors: bool = False):
+        """Convenience method (for AHS Electronics Workshop Class) to get all color channels mapped to their names. Ignores OSErrors unless log_errors is True"""
+        try:
+            all_channels = self.all_channels
+            return {
+                'violet': all_channels[0],
+                'indigo': all_channels[1],
+                'blue': all_channels[2],
+                'cyan': all_channels[3],
+                'green': all_channels[4],
+                'yellow': all_channels[5],
+                'orange': all_channels[6],
+                'red': all_channels[7],
+            }
+        except OSError as err:
+            if log_errors:
+                print("OSError: ", err)
+
 
     @property
     def all_channels(self) -> Tuple[int, ...]:
