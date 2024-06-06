@@ -264,34 +264,6 @@ SMUX_IN.add_values(
     )
 )
 
-# class Readings:
-#     violet = 0,
-#     indigo = 0,
-#     blue = 0,
-#     cyan = 0,
-#     green = 0,
-#     yellow = 0,
-#     orange = 0,
-#     red = 0,
-#     def __init__(self,
-#         violet: int,
-#         indigo: int,
-#         blue: int,
-#         cyan: int,
-#         green: int,
-#         yellow: int,
-#         orange: int,
-#         red: int,
-#     ) -> None:
-#         self.violet = violet
-#         self.indigo = indigo
-#         self.blue = blue
-#         self.cyan = cyan
-#         self.green = green
-#         self.yellow = yellow
-#         self.orange = orange
-#         self.red = red
-
 class AS7341:  # pylint:disable=too-many-instance-attributes, no-member
     """Library for the AS7341 Sensor
 
